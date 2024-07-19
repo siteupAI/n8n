@@ -41,7 +41,6 @@ import { OrchestrationService } from '@/services/orchestration.service';
 import { AuditEventRelay } from './eventbus/audit-event-relay.service';
 import { License } from './License';
 import { AuthService } from './auth/auth.service';
-import { getAiServiceProxyMiddleware } from '@n8n_io/ai-assistant-sdk';
 
 import '@/controllers/activeWorkflows.controller';
 import '@/controllers/auth.controller';
@@ -398,6 +397,8 @@ export class Server extends AbstractServer {
 		const aiServiceApiBase = config.get('aiAssistant.baseUrl');
 
 		if (!aiAssistantEnabled) return;
+
+		const { getAiServiceProxyMiddleware } = await import('@n8n_io/ai-assistant-sdk');
 
 		this.app.use(
 			`/${apiRestPath}/ai-proxy`,
