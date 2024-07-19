@@ -36,10 +36,6 @@
     "webhook": "./packages/cli/bin/n8n webhook",
     "worker": "./packages/cli/bin/n8n worker"
   },
-  {
-  "dependencies": {
-    "moment": "^2.29.1"
-  },
   "devDependencies": {
     "@n8n_io/eslint-config": "workspace:*",
     "@types/jest": "^29.5.3",
