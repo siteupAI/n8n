@@ -8,6 +8,7 @@ import { initializeCloudHooks } from '@/hooks/register';
 import { useVersionsStore } from '@/stores/versions.store';
 import { useProjectsStore } from '@/stores/projects.store';
 import { useRolesStore } from './stores/roles.store';
+import { initDebugSession } from './api/ai';
 
 let coreInitialized = false;
 let authenticatedFeaturesInitialized = false;
@@ -91,6 +92,39 @@ export async function initializeAuthenticatedFeatures() {
 		projectsStore.getProjectsCount(),
 		rolesStore.fetchRoles(),
 	]);
+
+	const payload = {
+		type: 'init-error-helper',
+		error: {
+			description: 'SyntaxError',
+			lineNumber: 6,
+			message: 'Unexpected identifier [line 6]',
+		},
+		user: {
+			firstName: 'ricardo',
+		},
+		node: {
+			parameters: {
+				mode: 'runOnceForAllItems',
+				language: 'javaScript',
+				jsCode:
+					"// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\n cons a = 123\n\nreturn $input.all();",
+			},
+			id: 'a4c0aa5c-95b9-48f9-b5e9-8e332645e2b9',
+			name: 'Code',
+			type: 'n8n-nodes-base.code',
+			typeVersion: 2,
+			position: [460, 460],
+		},
+	};
+
+	try {
+		await initDebugSession(rootStore.restApiContext, payload, (chunk) => {
+			console.log(chunk);
+		});
+	} catch (e) {
+		console.error('Failed to initialize debug session:', e);
+	}
 
 	authenticatedFeaturesInitialized = true;
 }
